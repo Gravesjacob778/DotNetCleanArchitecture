@@ -1,0 +1,35 @@
+@CleanTemplate.WebApi_HostAddress = http://localhost:5269
+
+POST {{CleanTemplate.WebApi_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "demo@example.com",
+  "password": "ChangeMe123!"
+}
+
+###
+
+POST {{CleanTemplate.WebApi_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@example.com",
+  "password": "ChangeMe123!"
+}
+
+###
+
+GET {{CleanTemplate.WebApi_HostAddress}}/api/todoitems
+Authorization: Bearer REPLACE_WITH_TOKEN
+Accept: application/json
+
+###
+
+POST {{CleanTemplate.WebApi_HostAddress}}/api/todoitems
+Authorization: Bearer REPLACE_WITH_TOKEN
+Content-Type: application/json
+
+{
+  "title": "First item"
+}
