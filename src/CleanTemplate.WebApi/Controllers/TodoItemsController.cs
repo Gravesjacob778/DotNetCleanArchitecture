@@ -9,14 +9,9 @@ namespace CleanTemplate.WebApi.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/todoitems")]
-public sealed class TodoItemsController : ControllerBase
+public sealed class TodoItemsController(ITodoItemService todoItemService) : ControllerBase
 {
-    private readonly ITodoItemService _todoItemService;
-
-    public TodoItemsController(ITodoItemService todoItemService)
-    {
-        _todoItemService = todoItemService;
-    }
+    private readonly ITodoItemService _todoItemService = todoItemService;
 
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<TodoItemDto>>> GetAll(CancellationToken cancellationToken)

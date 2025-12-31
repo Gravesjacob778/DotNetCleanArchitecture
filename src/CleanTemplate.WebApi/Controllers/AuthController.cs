@@ -7,14 +7,9 @@ namespace CleanTemplate.WebApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public sealed class AuthController : ControllerBase
+public sealed class AuthController(IIdentityService identityService) : ControllerBase
 {
-    private readonly IIdentityService _identityService;
-
-    public AuthController(IIdentityService identityService)
-    {
-        _identityService = identityService;
-    }
+    private readonly IIdentityService _identityService = identityService;
 
     [AllowAnonymous]
     [HttpPost("register")]
@@ -26,7 +21,7 @@ public sealed class AuthController : ControllerBase
             return BadRequest(new AuthResponse(null, result.Errors));
         }
 
-        return Ok(new AuthResponse(result.Token, Array.Empty<string>()));
+        return Ok(new AuthResponse(result.Token, []));
     }
 
     [AllowAnonymous]
