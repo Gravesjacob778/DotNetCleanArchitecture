@@ -6,12 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanTemplate.Infrastructure.Persistence;
 
-public sealed class ApplicationDbContext : IdentityDbContext<AppUser>, IApplicationDbContext
+public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<AppUser>(options), IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
 
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 

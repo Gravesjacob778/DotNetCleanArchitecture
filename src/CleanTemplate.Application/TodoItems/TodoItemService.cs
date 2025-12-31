@@ -30,7 +30,7 @@ public sealed class TodoItemService : ITodoItemService
             Id = Guid.NewGuid(),
             Title = title,
             IsDone = false,
-            CreatedAtUtc = DateTime.UtcNow,
+            CreatedAtUtc = DateTime.Now,
         };
 
         _context.TodoItems.Add(entity);

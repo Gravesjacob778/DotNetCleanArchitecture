@@ -10,16 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CleanTemplate.Infrastructure.Identity;
 
-public sealed class IdentityService : IIdentityService
+public sealed class IdentityService(UserManager<AppUser> userManager, IOptions<JwtOptions> jwtOptions) : IIdentityService
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly JwtOptions _jwtOptions;
-
-    public IdentityService(UserManager<AppUser> userManager, IOptions<JwtOptions> jwtOptions)
-    {
-        _userManager = userManager;
-        _jwtOptions = jwtOptions.Value;
-    }
+    private readonly UserManager<AppUser> _userManager = userManager;
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
     public async Task<AuthResult> RegisterAsync(string email, string password, CancellationToken cancellationToken = default)
     {
@@ -39,13 +33,13 @@ public sealed class IdentityService : IIdentityService
         var user = await _userManager.FindByEmailAsync(email);
         if (user is null)
         {
-            return AuthResult.Failure(new[] { "Invalid credentials." });
+            return AuthResult.Failure(["Invalid credentials."]);
         }
 
         var isValid = await _userManager.CheckPasswordAsync(user, password);
         if (!isValid)
         {
-            return AuthResult.Failure(new[] { "Invalid credentials." });
+            return AuthResult.Failure(["Invalid credentials."]);
         }
 
         return AuthResult.Success(CreateToken(user));
@@ -62,7 +56,7 @@ public sealed class IdentityService : IIdentityService
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.UtcNow.AddMinutes(_jwtOptions.TokenLifetimeMinutes);
+        var expires = DateTime.Now.AddMinutes(_jwtOptions.TokenLifetimeMinutes);
 
         var token = new JwtSecurityToken(
             _jwtOptions.Issuer,
